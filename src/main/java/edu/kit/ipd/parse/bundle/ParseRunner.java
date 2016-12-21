@@ -69,11 +69,19 @@ public class ParseRunner {
 		CommandLine line = null;
 		final Options options = new Options();
 		Option configOption;
+		final Option interactiveOption;
 
 		configOption = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
 		configOption.setRequired(false);
 		configOption.setType(Integer.class);
+
+		interactiveOption = new Option(CMD_OPTION_INTERACTIVE_MODE, "interactive-mode", false,
+				"Starts the audio recorder GUI and runs LUNA afterwards");
+		interactiveOption.setRequired(false);
+		interactiveOption.setType(Integer.class);
+
 		options.addOption(configOption);
+		options.addOption(interactiveOption);
 
 		// create the parser
 		final CommandLineParser parser = new DefaultParser();

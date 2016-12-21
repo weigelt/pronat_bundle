@@ -13,6 +13,7 @@ import edu.kit.ipd.parse.luna.LunaRunException;
 public class ParseRunner {
 
 	private static final String CMD_OPTION_CREATE_CONFIG_FILES = "c";
+	private static final String CMD_OPTION_INTERACTIVE_MODE = "i";
 
 	private static Luna luna = Luna.getInstance();
 
@@ -30,7 +31,7 @@ public class ParseRunner {
 		//command line parsing
 		try {
 			cmd = doCommandLineParsing(args);
-		} catch (ParseException exception) {
+		} catch (final ParseException exception) {
 			System.err.println("Wrong command line arguments given: " + exception.getMessage());
 			System.exit(1);
 		}
@@ -39,16 +40,19 @@ public class ParseRunner {
 			// do whatever to do
 		}
 
-		//init luna
-		initLuna();
+		if (cmd.hasOption(CMD_OPTION_INTERACTIVE_MODE)) {
+			//init luna
+			initLuna();
 
-		// run luna
-		try {
-			runLuna();
-		} catch (LunaRunException e) {
-			System.err.println("Exeption during run of LUNA: " + e.getMessage());
-			System.exit(1);
+			// run luna
+			try {
+				runLuna();
+			} catch (final LunaRunException e) {
+				System.err.println("Exeption during run of LUNA: " + e.getMessage());
+				System.exit(1);
+			}
 		}
+
 		System.exit(0);
 	}
 
@@ -63,7 +67,7 @@ public class ParseRunner {
 	 */
 	static CommandLine doCommandLineParsing(String[] args) throws ParseException {
 		CommandLine line = null;
-		Options options = new Options();
+		final Options options = new Options();
 		Option o;
 
 		o = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
@@ -72,7 +76,7 @@ public class ParseRunner {
 		options.addOption(o);
 
 		// create the parser
-		CommandLineParser parser = new DefaultParser();
+		final CommandLineParser parser = new DefaultParser();
 
 		line = parser.parse(options, args);
 
@@ -84,8 +88,7 @@ public class ParseRunner {
 	}
 
 	private static void initLuna() {
-		// TODO Auto-generated method stub
-
+		luna.init();
 	}
 
 }

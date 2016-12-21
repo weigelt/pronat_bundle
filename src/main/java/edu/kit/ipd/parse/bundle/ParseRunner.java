@@ -68,12 +68,12 @@ public class ParseRunner {
 	static CommandLine doCommandLineParsing(String[] args) throws ParseException {
 		CommandLine line = null;
 		final Options options = new Options();
-		Option o;
+		Option configOption;
 
-		o = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
-		o.setRequired(false);
-		o.setType(Integer.class);
-		options.addOption(o);
+		configOption = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
+		configOption.setRequired(false);
+		configOption.setType(Integer.class);
+		options.addOption(configOption);
 
 		// create the parser
 		final CommandLineParser parser = new DefaultParser();

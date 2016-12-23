@@ -23,5 +23,9 @@
 			<groupId>edu.kit.ipd.parse</groupId>
 			<artifactId>luna</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>voice_recorder</artifactId>
+		</dependency>
 	</dependencies>
 </project>

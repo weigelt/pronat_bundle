@@ -1,5 +1,10 @@
 package edu.kit.ipd.parse.bundle;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+import javax.swing.JFrame;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,6 +14,8 @@ import org.apache.commons.cli.ParseException;
 
 import edu.kit.ipd.parse.luna.Luna;
 import edu.kit.ipd.parse.luna.LunaRunException;
+import edu.kit.ipd.parse.luna.data.MissingDataException;
+import edu.kit.ipd.parse.voice_recorder.VoiceRecorder;
 
 public class ParseRunner {
 
@@ -41,9 +48,18 @@ public class ParseRunner {
 		}
 
 		if (cmd.hasOption(CMD_OPTION_INTERACTIVE_MODE)) {
+
+			final VoiceRecorder vc = new VoiceRecorder();
+			runVC(vc);
 			//init luna
 			initLuna();
-
+			luna.getPrePipelineData().setInputFilePath(vc.getSavedFilePath());
+			try {
+				System.out.println(luna.getPrePipelineData().getInputFilePath());
+			} catch (final MissingDataException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			// run luna
 			try {
 				runLuna();
@@ -97,6 +113,24 @@ public class ParseRunner {
 
 	private static void initLuna() {
 		luna.init();
+	}
+
+	private static void runVC(VoiceRecorder vc) {
+		vc.open();
+		final JFrame f = new JFrame("Capture/Playback");
+		//		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().add("Center", vc);
+		f.pack();
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final int w = 360;
+		final int h = 170;
+		f.setLocation(screenSize.width / 2 - w / 2, screenSize.height / 2 - h / 2);
+		f.setSize(w, h);
+		f.setVisible(true);
+		int i = 0;
+		while (!vc.hasRecorded()) {
+			System.out.println(i++);
+		}
 	}
 
 }

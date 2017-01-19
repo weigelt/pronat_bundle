@@ -23,6 +23,7 @@ public class ParseRunner {
 	private static final String CMD_OPTION_CREATE_CONFIG_FILES = "c";
 	private static final String CMD_OPTION_INTERACTIVE_MODE = "i";
 	private static final String CMD_OPTION_TEST_MODE = "t";
+	private static final String CMD_OPTION_SAVE_TO_FILE = "s";
 
 	private static Luna luna = Luna.getInstance();
 
@@ -78,6 +79,10 @@ public class ParseRunner {
 			}
 		}
 
+		if(cmd.hasOption(CMD_OPTION_SAVE_TO_FILE)){
+			//			luna.getMainGraph().
+		}
+
 		System.exit(0);
 	}
 
@@ -96,6 +101,7 @@ public class ParseRunner {
 		final Option configOption;
 		final Option interactiveOption;
 		final Option testOption;
+		final Option saveOption;
 
 		configOption = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
 		configOption.setRequired(false);
@@ -109,6 +115,10 @@ public class ParseRunner {
 		testOption = new Option(CMD_OPTION_TEST_MODE, "test-mode", true, "Runs LUNA on the specified audio file");
 		testOption.setRequired(false);
 		testOption.setType(Path.class);
+
+		saveOption = new Option(CMD_OPTION_SAVE_TO_FILE, "save-to-file", true, "Saves the resulting graph into the specified agg file");
+		saveOption.setRequired(false);
+		saveOption.setType(Path.class);
 
 		options.addOption(configOption);
 		options.addOption(interactiveOption);

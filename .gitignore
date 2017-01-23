@@ -28,3 +28,5 @@ deploy/
 *.resharper
 *.suo
 *.cache
+*.ggx
+plugins/

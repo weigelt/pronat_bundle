@@ -16,6 +16,8 @@ import org.apache.commons.cli.ParseException;
 
 import edu.kit.ipd.parse.luna.Luna;
 import edu.kit.ipd.parse.luna.LunaRunException;
+import edu.kit.ipd.parse.luna.graph.AGGGraphCreator;
+import edu.kit.ipd.parse.luna.graph.ParseGraph;
 import edu.kit.ipd.parse.voice_recorder.VoiceRecorder;
 
 public class ParseRunner {
@@ -80,7 +82,9 @@ public class ParseRunner {
 		}
 
 		if(cmd.hasOption(CMD_OPTION_SAVE_TO_FILE)){
-			//			luna.getMainGraph().
+			AGGGraphCreator agggc = new AGGGraphCreator((ParseGraph) luna.getMainGraph());
+			agggc.saveTo(cmd.getOptionValue(CMD_OPTION_SAVE_TO_FILE),
+					Paths.get(".").toAbsolutePath().normalize().toString());
 		}
 
 		System.exit(0);
@@ -123,6 +127,7 @@ public class ParseRunner {
 		options.addOption(configOption);
 		options.addOption(interactiveOption);
 		options.addOption(testOption);
+		options.addOption(saveOption);
 
 		// create the parser
 		final CommandLineParser parser = new DefaultParser();

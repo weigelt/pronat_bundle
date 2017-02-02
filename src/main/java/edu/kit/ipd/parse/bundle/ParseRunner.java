@@ -2,8 +2,11 @@ package edu.kit.ipd.parse.bundle;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 
@@ -13,11 +16,14 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.FileUtils;
 
 import edu.kit.ipd.parse.luna.Luna;
 import edu.kit.ipd.parse.luna.LunaRunException;
 import edu.kit.ipd.parse.luna.graph.AGGGraphCreator;
 import edu.kit.ipd.parse.luna.graph.ParseGraph;
+import edu.kit.ipd.parse.luna.tools.ConfigManager;
+import edu.kit.ipd.parse.luna.tools.StringToHypothesis;
 import edu.kit.ipd.parse.voice_recorder.VoiceRecorder;
 
 public class ParseRunner {
@@ -26,8 +32,11 @@ public class ParseRunner {
 	private static final String CMD_OPTION_INTERACTIVE_MODE = "i";
 	private static final String CMD_OPTION_TEST_MODE = "t";
 	private static final String CMD_OPTION_SAVE_TO_FILE = "s";
+	private static final String CMD_OPTION_FILE_MODE = "f";
 
 	private static Luna luna = Luna.getInstance();
+	
+	static Properties lunaProps;
 
 	private ParseRunner() {
 	}
@@ -39,6 +48,7 @@ public class ParseRunner {
 	 *            Command line arguments (to be parsed with commons-cli)
 	 */
 	public static void main(String[] args) {
+		lunaProps = ConfigManager.getConfiguration(Luna.class);
 		CommandLine cmd = null;
 		//command line parsing
 		try {
@@ -80,6 +90,31 @@ public class ParseRunner {
 				System.exit(1);
 			}
 		}
+		
+		if (cmd.hasOption(CMD_OPTION_FILE_MODE)) {
+			//init luna
+			String lunaPrePipe = lunaProps.getProperty("PRE_PIPE");
+			if(lunaPrePipe.contains("multiasr")){
+				lunaProps.setProperty("PRE_PIPE", lunaPrePipe.replace("multiasr", ""));
+			}
+			initLuna();
+			File textFile = new File(CMD_OPTION_FILE_MODE);
+			String string = "";
+			try {
+				string = FileUtils.readFileToString(textFile);
+			} catch (IOException e1) {
+				System.err.println("IO Exeption read of text file: " + e1.getMessage());
+				System.exit(1);
+			}
+			luna.getPrePipelineData().setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
+			// run luna
+			try {
+				runLuna();
+			} catch (final LunaRunException e) {
+				System.err.println("Exeption during run of LUNA: " + e.getMessage());
+				System.exit(1);
+			}
+		}
 
 		if(cmd.hasOption(CMD_OPTION_SAVE_TO_FILE)){
 			AGGGraphCreator agggc = new AGGGraphCreator((ParseGraph) luna.getMainGraph());
@@ -106,6 +141,7 @@ public class ParseRunner {
 		final Option interactiveOption;
 		final Option testOption;
 		final Option saveOption;
+		final Option fileOption;
 
 		configOption = new Option(CMD_OPTION_CREATE_CONFIG_FILES, "create-config-files", false, "Creates config files in /user/.parse");
 		configOption.setRequired(false);
@@ -119,6 +155,10 @@ public class ParseRunner {
 		testOption = new Option(CMD_OPTION_TEST_MODE, "test-mode", true, "Runs LUNA on the specified audio file");
 		testOption.setRequired(false);
 		testOption.setType(Path.class);
+		
+		fileOption = new Option(CMD_OPTION_FILE_MODE, "file-mode", true, "Runs LUNA on the specified text file (no ASR is needed)");
+		fileOption.setRequired(false);
+		fileOption.setType(Path.class);
 
 		saveOption = new Option(CMD_OPTION_SAVE_TO_FILE, "save-to-file", true, "Saves the resulting graph into the specified agg file");
 		saveOption.setRequired(false);
@@ -128,6 +168,7 @@ public class ParseRunner {
 		options.addOption(interactiveOption);
 		options.addOption(testOption);
 		options.addOption(saveOption);
+		options.addOption(fileOption);
 
 		// create the parser
 		final CommandLineParser parser = new DefaultParser();

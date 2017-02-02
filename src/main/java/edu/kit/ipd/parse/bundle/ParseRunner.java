@@ -98,7 +98,7 @@ public class ParseRunner {
 				lunaProps.setProperty("PRE_PIPE", lunaPrePipe.replace("multiasr", ""));
 			}
 			initLuna();
-			File textFile = new File(CMD_OPTION_FILE_MODE);
+			File textFile = new File(cmd.getOptionValue(CMD_OPTION_FILE_MODE));
 			String string = "";
 			try {
 				string = FileUtils.readFileToString(textFile);

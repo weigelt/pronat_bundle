@@ -27,5 +27,53 @@
 			<groupId>edu.kit.ipd.parse</groupId>
 			<artifactId>voice_recorder</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>graphBuilder</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>ShallowNLP</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>asr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>ner</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>ontology_connection</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>coref</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>SRLabeler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>wsd</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.kit.ipd.parse</groupId>
+			<artifactId>condition_detection</artifactId>
+		</dependency>
+		<dependency>
+                        <groupId>edu.kit.ipd.parse</groupId>
+                        <artifactId>loop_detection</artifactId>
+                </dependency>
+		<dependency>
+                        <groupId>edu.kit.ipd.parse</groupId>
+                        <artifactId>concurrency_detection</artifactId>
+                </dependency>
 	</dependencies>
 </project>

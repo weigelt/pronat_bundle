@@ -31,3 +31,10 @@ deploy/
 *.ggx
 plugins/
 *.txt
+
+# IntelliJ IDE
+.idea/*
+*.iws
+*.iml
+*.eml
+/out/

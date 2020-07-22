@@ -35,7 +35,7 @@ public class ParseRunner {
 	private static final String CMD_OPTION_FILE_MODE = "f";
 
 	private static Luna luna = Luna.getInstance();
-	
+
 	static Properties lunaProps;
 
 	private ParseRunner() {
@@ -90,11 +90,11 @@ public class ParseRunner {
 				System.exit(1);
 			}
 		}
-		
+
 		if (cmd.hasOption(CMD_OPTION_FILE_MODE)) {
 			//init luna
 			String lunaPrePipe = lunaProps.getProperty("PRE_PIPE");
-			if(lunaPrePipe.contains("multiasr")){
+			if (lunaPrePipe.contains("multiasr")) {
 				lunaProps.setProperty("PRE_PIPE", lunaPrePipe.replace("multiasr", ""));
 			}
 			initLuna();
@@ -116,10 +116,9 @@ public class ParseRunner {
 			}
 		}
 
-		if(cmd.hasOption(CMD_OPTION_SAVE_TO_FILE)){
+		if (cmd.hasOption(CMD_OPTION_SAVE_TO_FILE)) {
 			AGGGraphCreator agggc = new AGGGraphCreator((ParseGraph) luna.getMainGraph());
-			agggc.saveTo(cmd.getOptionValue(CMD_OPTION_SAVE_TO_FILE),
-					Paths.get(".").toAbsolutePath().normalize().toString());
+			agggc.saveTo(cmd.getOptionValue(CMD_OPTION_SAVE_TO_FILE), Paths.get(".").toAbsolutePath().normalize().toString());
 		}
 
 		System.exit(0);
@@ -155,7 +154,7 @@ public class ParseRunner {
 		testOption = new Option(CMD_OPTION_TEST_MODE, "test-mode", true, "Runs LUNA on the specified audio file");
 		testOption.setRequired(false);
 		testOption.setType(Path.class);
-		
+
 		fileOption = new Option(CMD_OPTION_FILE_MODE, "file-mode", true, "Runs LUNA on the specified text file (no ASR is needed)");
 		fileOption.setRequired(false);
 		fileOption.setType(Path.class);

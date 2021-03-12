@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.bundle;
+package edu.kit.ipd.pronat.bundle;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -10,6 +10,9 @@ import java.util.Properties;
 
 import javax.swing.JFrame;
 
+import edu.kit.ipd.parse.luna.LunaInitException;
+import edu.kit.ipd.pronat.prepipedatamodel.PrePipelineData;
+import edu.kit.ipd.pronat.prepipedatamodel.tools.StringToHypothesis;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -21,10 +24,9 @@ import org.apache.commons.io.FileUtils;
 import edu.kit.ipd.parse.luna.Luna;
 import edu.kit.ipd.parse.luna.LunaRunException;
 import edu.kit.ipd.parse.luna.tools.ConfigManager;
-import edu.kit.ipd.parse.luna.tools.StringToHypothesis;
 import edu.kit.ipd.parse.voice_recorder.VoiceRecorder;
 
-public class ParseRunner {
+public class PronatRunner {
 
 	private static final String CMD_OPTION_CREATE_CONFIG_FILES = "c";
 	private static final String CMD_OPTION_INTERACTIVE_MODE = "i";
@@ -36,7 +38,7 @@ public class ParseRunner {
 
 	static Properties lunaProps;
 
-	private ParseRunner() {
+	private PronatRunner() {
 	}
 
 	/**
@@ -57,6 +59,7 @@ public class ParseRunner {
 		}
 
 		if (cmd.hasOption(CMD_OPTION_CREATE_CONFIG_FILES)) {
+			// TODO:
 			// do whatever to do
 		}
 
@@ -65,26 +68,42 @@ public class ParseRunner {
 			final VoiceRecorder vc = new VoiceRecorder();
 			runVC(vc);
 			//init luna
-			initLuna();
-			luna.getPrePipelineData().setInputFilePath(vc.getSavedFilePath());
+			try {
+				initLuna();
+			} catch (LunaInitException e) {
+				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
+				System.exit(1);
+			}
+			PrePipelineData prePipelineData = new PrePipelineData();
+			prePipelineData.setInputFilePath(vc.getSavedFilePath());
+			luna.setPrePipelineData(prePipelineData);
+			//			luna.getPrePipelineData().setInputFilePath(vc.getSavedFilePath());
 			// run luna
 			try {
 				runLuna();
 			} catch (final LunaRunException e) {
-				System.err.println("Exeption during run of LUNA: " + e.getMessage());
+				System.err.println("Exception during run of LUNA: " + e.getMessage());
 				System.exit(1);
 			}
 		}
 
 		if (cmd.hasOption(CMD_OPTION_TEST_MODE)) {
 			//init luna
-			initLuna();
-			luna.getPrePipelineData().setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
+			try {
+				initLuna();
+			} catch (LunaInitException e) {
+				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
+				System.exit(1);
+			}
+			PrePipelineData prePipelineData = new PrePipelineData();
+			prePipelineData.setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
+			luna.setPrePipelineData(prePipelineData);
+			//			luna.getPrePipelineData().setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
 			// run luna
 			try {
 				runLuna();
 			} catch (final LunaRunException e) {
-				System.err.println("Exeption during run of LUNA: " + e.getMessage());
+				System.err.println("Exception during run of LUNA: " + e.getMessage());
 				System.exit(1);
 			}
 		}
@@ -95,21 +114,30 @@ public class ParseRunner {
 			if (lunaPrePipe.contains("multiasr")) {
 				lunaProps.setProperty("PRE_PIPE", lunaPrePipe.replace("multiasr", ""));
 			}
-			initLuna();
+			try {
+				initLuna();
+			} catch (LunaInitException e) {
+				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
+				System.exit(1);
+			}
 			File textFile = new File(cmd.getOptionValue(CMD_OPTION_FILE_MODE));
 			String string = "";
 			try {
 				string = FileUtils.readFileToString(textFile);
 			} catch (IOException e1) {
-				System.err.println("IO Exeption read of text file: " + e1.getMessage());
+				System.err.println("IO Exception read of text file: " + e1.getMessage());
 				System.exit(1);
 			}
-			luna.getPrePipelineData().setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
+			PrePipelineData prePipelineData = new PrePipelineData();
+			//TODO: add option to use stanford tokenizer or not and use proper method
+			prePipelineData.setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
+			luna.setPrePipelineData(prePipelineData);
+			//			luna.getPrePipelineData().setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
 			// run luna
 			try {
 				runLuna();
 			} catch (final LunaRunException e) {
-				System.err.println("Exeption during run of LUNA: " + e.getMessage());
+				System.err.println("Exception during run of LUNA: " + e.getMessage());
 				System.exit(1);
 			}
 		}
@@ -180,7 +208,7 @@ public class ParseRunner {
 		luna.run();
 	}
 
-	private static void initLuna() {
+	private static void initLuna() throws LunaInitException {
 		luna.init();
 	}
 

@@ -3,12 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>edu.kit.ipd.parse</groupId>
-        <artifactId>parse</artifactId>
-        <version>0.0.5-SNAPSHOT</version>
+        <groupId>edu.kit.ipd.pronat</groupId>
+        <artifactId>pronat</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>bundle</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
+    <name>ProNat Bundle and Runner</name>
     <repositories>
         <repository>
             <id>ipdNexus-public-releases</id>
@@ -32,6 +33,11 @@
         <dependency>
             <groupId>edu.kit.ipd.parse</groupId>
             <artifactId>ontology_connection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.pronat</groupId>
+            <artifactId>pre_pipeline_data_model</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -8,7 +8,7 @@
             <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
         </layout>
     </appender>
-    <logger name="edu.kit.ipd.parse.bundle">
+    <logger name="edu.kit.ipd.pronat.bundle">
         <level value="all"></level>
     </logger>
 

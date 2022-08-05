@@ -10,13 +10,6 @@
     <artifactId>bundle</artifactId>
     <version>0.0.4-SNAPSHOT</version>
     <name>ProNat Bundle and Runner</name>
-    <repositories>
-        <repository>
-            <id>ipdNexus-public-releases</id>
-            <name>IPD-Repository</name>
-            <url>http://bob.ipd.kit.edu/nexus/repository/maven-public-releases</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>commons-cli</groupId>

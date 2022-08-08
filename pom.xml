@@ -39,7 +39,7 @@
             <artifactId>luna</artifactId>
         </dependency>
         <dependency>
-            <groupId>edu.kit.ipd.parse</groupId>
+            <groupId>edu.kit.ipd.pronat</groupId>
             <artifactId>voice_recorder</artifactId>
         </dependency>
         <dependency>

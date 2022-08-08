@@ -10,6 +10,25 @@
     <artifactId>bundle</artifactId>
     <version>0.0.4-SNAPSHOT</version>
     <name>ProNat Bundle and Runner</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>plugins/</classpathPrefix>
+                            <classpathLayoutType>repository</classpathLayoutType>
+                            <mainClass>edu.kit.ipd.pronat.bundle.PronatRunner</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -30,7 +49,10 @@
         <dependency>
             <groupId>edu.kit.ipd.pronat</groupId>
             <artifactId>pre_pipeline_data_model</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.pronat</groupId>
+            <artifactId>post_pipeline_data_model</artifactId>
         </dependency>
     </dependencies>
 </project>

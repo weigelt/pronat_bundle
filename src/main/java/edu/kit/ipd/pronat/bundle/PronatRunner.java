@@ -63,18 +63,21 @@ public class PronatRunner {
 			// do whatever to do
 		}
 
+		PrePipelineData prePipelineData = new PrePipelineData();
+		PostPipelineData postPipelineData = new PostPipelineData();
+
 		if (cmd.hasOption(CMD_OPTION_INTERACTIVE_MODE)) {
 
 			final VoiceRecorder vc = new VoiceRecorder();
 			runVC(vc);
 			//init luna
 			try {
-				initLuna();
+				initLuna(prePipelineData, postPipelineData);
 			} catch (LunaInitException e) {
 				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
 				System.exit(1);
 			}
-			PrePipelineData prePipelineData = new PrePipelineData();
+			//			PrePipelineData prePipelineData = new PrePipelineData();
 			prePipelineData.setInputFilePath(vc.getSavedFilePath());
 			luna.setPrePipelineData(prePipelineData);
 			//			luna.getPrePipelineData().setInputFilePath(vc.getSavedFilePath());
@@ -89,15 +92,25 @@ public class PronatRunner {
 
 		if (cmd.hasOption(CMD_OPTION_TEST_MODE)) {
 			//init luna
+			// Test
+			//			PrePipelineData prePipelineData = new PrePipelineData();
+			//			luna.setPrePipelineData(prePipelineData);
+			// Test
 			try {
-				initLuna();
+				initLuna(prePipelineData, postPipelineData);
 			} catch (LunaInitException e) {
 				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
 				System.exit(1);
 			}
-			PrePipelineData prePipelineData = new PrePipelineData();
-			prePipelineData.setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
-			luna.setPrePipelineData(prePipelineData);
+			//			PrePipelineData prePipelineData = new PrePipelineData();
+			//			prePipelineData.setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
+			//			luna.setPrePipelineData(prePipelineData);
+			try {
+				((PrePipelineData) luna.getPrePipelineData().asPrePipelineData())
+						.setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
+			} catch (PipelineDataCastException e) {
+				e.printStackTrace();
+			}
 			//			luna.getPrePipelineData().setInputFilePath(Paths.get(cmd.getOptionValue(CMD_OPTION_TEST_MODE)));
 			// run luna
 			try {
@@ -115,7 +128,7 @@ public class PronatRunner {
 				lunaProps.setProperty("PRE_PIPE", lunaPrePipe.replace("multiasr", ""));
 			}
 			try {
-				initLuna();
+				initLuna(prePipelineData, postPipelineData);
 			} catch (LunaInitException e) {
 				System.err.println("Exception during initialization of LUNA: " + e.getMessage());
 				System.exit(1);
@@ -128,9 +141,9 @@ public class PronatRunner {
 				System.err.println("IO Exception read of text file: " + e1.getMessage());
 				System.exit(1);
 			}
-			PrePipelineData prePipelineData = new PrePipelineData();
+			//			PrePipelineData prePipelineData = new PrePipelineData();
 			//TODO: add option to use stanford tokenizer or not and use proper method
-			prePipelineData.setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
+			prePipelineData.setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string, true));
 			luna.setPrePipelineData(prePipelineData);
 			//			luna.getPrePipelineData().setMainHypothesis(StringToHypothesis.stringToMainHypothesis(string));
 			// run luna
@@ -208,8 +221,9 @@ public class PronatRunner {
 		luna.run();
 	}
 
-	private static void initLuna() throws LunaInitException {
-		luna.init();
+	private static void initLuna(AbstractPrePipelineData abstractPrePipelineData, AbstractPostPipelineData abstractPostPipelineData)
+			throws LunaInitException {
+		luna.init(abstractPrePipelineData, abstractPostPipelineData);
 	}
 
 	private static void runVC(VoiceRecorder vc) {
